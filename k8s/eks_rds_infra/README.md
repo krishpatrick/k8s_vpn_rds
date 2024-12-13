@@ -1,3 +1,4 @@
+## Optional - May Not needed for this setup
 ## Provision Kubernetes Cluster on AWS (EKS). It is easy way or you can also use terraform
 
 ## Step 1:

@@ -16,7 +16,7 @@ Ensure SSL is enabled on your RDS instance:
    aws rds modify-db-instance --db-instance-identifier <your-db-instance-id> --enable-ssl --apply-immediately
    ```
 
-### Step 2: Download the RDS Root CA Certificate
+### Step 2: Download the RDS Root CA Certificate ## Ignore Steps if already done
 
 1. **Download the root CA certificate** for your RDS region:
 

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  namespace: staging  # Or "production" for production environment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: my-app-image
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: staging-db-credentials  # Or "production-db-credentials"
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: staging-db-credentials  # Or "production-db-credentials"
+              key: password
+        - name: DB_SSL_CERT
+          valueFrom:
+           secretKeyRef:
+             name: rds-ca-certificate
+             key: rds-combined-ca-bundle.pem

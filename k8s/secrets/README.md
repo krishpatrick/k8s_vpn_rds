@@ -1,14 +1,21 @@
-#### Do not commit any senstive data like passwords and also optionally user and db-endpoint in to your git repo ####
-#### Use KV Task or Hashicorp Vault during the pipeline ####
-#### Setup Rotation policies for DB credentials stored in KeyVaults ####
-### Optional use Credential providers cocepts equivalent in AWS ??###
+##
+## Create SSL certificates for securing the connection between kubernetes to RDS. Execute steps in ssl.readme.md 
+## Steps
+### Step 1-  Download the RDS Root CA Certificate
 
-TODO 
-1. Keyvault
-2. Rotation
-3. Replace pipeline task to replace tokens in these secret yamls during pipeline or deloyment
+1. **Download the root CA certificate** for your RDS region:
 
-## Encode the values using:
+   - [Download RDS Root CA](https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem).
+
+2. **Store the Certificate**: Upload the certificate to your on-prem Kubernetes cluster. You can create a Kubernetes secret to hold the certificate for secure access.
+
+   ```bash
+   kubectl create secret generic rds-ca-certificate --from-file=rds-combined-ca-bundle.pem=/path/to/rds-combined-ca-bundle.pem --namespace staging
+   kubectl create secret generic rds-ca-certificate --from-file=rds-combined-ca-bundle.pem=/path/to/rds-combined-ca-bundle.pem --namespace production
+##
+
+## Step 2 
+## Steps to Encode the values using:
 
 echo -n 'value' | base64
 echo -n "staginguser" | base64
@@ -52,7 +59,7 @@ spec:
         - name: DB_SSL_CERT
           valueFrom:
             configMapKeyRef:
-              name: rds-ssl-cert  # ConfigMap storing the RDS SSL certificate
+              name: rds-ca-certificate  # ConfigMap storing the RDS SSL certificate
               key: rds-combined-ca-bundle.pem
 ```
 ### YAML End
@@ -65,3 +72,10 @@ spec:
 3. Replace pipeline task to replace tokens in these secret yamls during pipeline or deloyment
 
 ```
+
+## Best Practices
+
+#### Do not commit any senstive data like passwords and also optionally user and db-endpoint in to your git repo ####
+#### Use KV Task or Hashicorp Vault during the pipeline ####
+#### Setup Rotation policies for DB credentials stored in KeyVaults ####
+### Optional use Credential providers concepts equivalent in AWS ??###
